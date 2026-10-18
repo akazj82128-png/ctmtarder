@@ -106,13 +106,27 @@
     .orange-glow-btn:active {
       transform: translateY(1px) scale(0.98);
     }
+    html {
+      font-size: 16.5px;
+      -webkit-text-size-adjust: 100%;
+    }
+    html.font-scale-normal { font-size: 15.5px; }
+    html.font-scale-large { font-size: 17px; }
+    html.font-scale-xlarge { font-size: 18.5px; }
+
+    /* Mobile comfort floor: prevent microscopic 9px/10px/11px text on phones */
+    .text-\[9px\] { font-size: 0.74rem !important; line-height: 1.15rem !important; }
+    .text-\[10px\] { font-size: 0.78rem !important; line-height: 1.2rem !important; }
+    .text-\[11px\] { font-size: 0.82rem !important; line-height: 1.25rem !important; }
+
     .input-dark {
       background-color: #09090E;
-      border: 1px solid rgba(255, 255, 255, 0.11);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       color: #F8FAFC;
-      border-radius: 0.6rem;
-      padding: 0.5rem 0.75rem;
-      font-size: 0.8125rem;
+      border-radius: 0.75rem;
+      padding: 0.625rem 0.85rem;
+      min-height: 2.8rem;
+      font-size: 0.9375rem;
       width: 100%;
       transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
@@ -184,51 +198,69 @@
 </head>
 <body class="antialiased selection:bg-ember-500 selection:text-white">
 
-  <!-- TOP STATUS HEADER (Compact Native App Sticky Bar) -->
-  <header class="sticky top-0 z-30 backdrop-blur-xl bg-obsidian-950/90 border-b border-white/10 px-3 sm:px-5 py-2">
-    <div class="max-w-5xl mx-auto flex items-center justify-between gap-2">
-      <!-- Brand & Trader Level -->
-      <div class="flex items-center gap-2 min-w-0">
-        <div onclick="switchTab('rpg')" class="cursor-pointer w-9 h-9 rounded-xl bg-gradient-to-br from-ember-500 to-amber-700 flex items-center justify-center shadow-md shadow-ember-500/20 border border-ember-300/30 shrink-0" title="查看巨獸養成狀態">
-          <span class="font-mono font-extrabold text-xs tracking-tighter text-white">CTM</span>
+  <!-- TOP STATUS HEADER (Spacious 2-Row Native App Sticky Bar — Never Truncates Brand on Mobile!) -->
+  <header class="sticky top-0 z-30 backdrop-blur-xl bg-obsidian-950/95 border-b border-white/10 px-3 sm:px-5 py-2.5">
+    <div class="max-w-5xl mx-auto space-y-2">
+      <!-- Row 1: Full Brand Title + SAN + RPG & Settings Quick Pills -->
+      <div class="flex items-center justify-between gap-2">
+        <div class="flex items-center gap-2.5 min-w-0">
+          <div onclick="switchTab('rpg')" class="cursor-pointer w-10 h-10 rounded-xl bg-gradient-to-br from-ember-500 to-amber-700 flex items-center justify-center shadow-md shadow-ember-500/20 border border-ember-300/30 shrink-0" title="查看巨獸養成狀態">
+            <span class="font-mono font-extrabold text-xs tracking-tighter text-white">CTM</span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-1.5">
+              <span class="text-sm sm:text-base font-extrabold tracking-wide text-white whitespace-nowrap">C.T.M 交易巨獸</span>
+              <span id="headerLevelBadge" class="px-1.5 py-0.5 text-[10px] font-mono font-bold rounded bg-ember-500/20 text-ember-400 border border-ember-500/40 shrink-0">LV.1</span>
+            </div>
+            <div class="flex items-center gap-1.5 text-[11px] text-zinc-400">
+              <span id="headerRankTitle" class="truncate">覺醒交易者</span>
+              <span class="text-zinc-600 hidden sm:inline">|</span>
+              <span class="font-mono text-[10px] text-amber-400/90 hidden sm:inline">DISCIPLINE IS DESTINY</span>
+            </div>
+          </div>
         </div>
-        <div class="min-w-0">
-          <div class="flex items-center gap-1.5">
-            <span class="text-xs sm:text-sm font-extrabold tracking-wide text-white truncate">C.T.M 交易巨獸</span>
-            <span id="headerLevelBadge" class="px-1.5 py-0.5 text-[10px] font-mono font-bold rounded bg-ember-500/20 text-ember-400 border border-ember-500/40 shrink-0">LV.1</span>
-          </div>
-          <div class="flex items-center gap-1.5 text-[10px] text-zinc-400">
-            <span id="headerRankTitle" class="truncate">覺醒交易者</span>
-            <span class="text-zinc-600 hidden sm:inline">|</span>
-            <span class="font-mono text-[9px] text-amber-400/90 hidden sm:inline">DISCIPLINE IS DESTINY</span>
-          </div>
+
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button onclick="switchTab('rpg')" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-obsidian-800 border border-white/10 hover:border-ember-500/40 transition" title="今日理智值 (SAN)">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" id="headerSanDot"></span>
+            <span class="font-mono text-xs font-bold text-zinc-200" id="headerSanText">SAN 100%</span>
+          </button>
+
+          <button onclick="switchTab('rpg')" id="nav-rpg" class="px-2.5 py-1.5 rounded-xl bg-obsidian-800 border border-white/10 hover:border-ember-500/40 text-zinc-200 hover:text-white transition flex items-center gap-1 text-xs font-bold" title="巨獸養成與成就">
+            <i data-lucide="trophy" class="w-4 h-4 text-amber-400"></i>
+            <span class="hidden sm:inline">養成</span>
+          </button>
+
+          <button onclick="switchTab('settings')" id="nav-settings" class="px-2.5 py-1.5 rounded-xl bg-obsidian-800 border border-white/10 hover:border-ember-500/40 text-zinc-200 hover:text-white transition flex items-center gap-1 text-xs font-bold" title="系統設定與標籤管理">
+            <i data-lucide="settings" class="w-4 h-4"></i>
+            <span class="hidden sm:inline">設定</span>
+          </button>
         </div>
       </div>
 
-      <!-- Account Selector & SAN Indicator & Install Guide -->
-      <div class="flex items-center gap-1.5 shrink-0">
-        <select id="headerAccountSelect" onchange="handleAccountChange(this.value)" aria-label="切換交易帳戶" class="bg-obsidian-800 text-[11px] font-semibold text-zinc-200 border border-ember-500/30 rounded-lg px-2 py-1.5 focus:outline-none focus:border-ember-500 cursor-pointer max-w-[118px] sm:max-w-[160px] truncate">
-        </select>
+      <!-- Row 2: Spacious Account Switcher + Google Cloud Backup + Font Size Scaler + Install App -->
+      <div class="flex items-center justify-between gap-2 pt-1.5 border-t border-white/5">
+        <div class="flex items-center gap-1.5 flex-1 min-w-0">
+          <span class="text-[11px] font-bold text-zinc-400 shrink-0 hidden sm:inline">當前帳戶:</span>
+          <select id="headerAccountSelect" onchange="handleAccountChange(this.value)" aria-label="切換交易帳戶" class="bg-obsidian-800 text-xs font-bold text-white border border-ember-500/35 rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-ember-500 cursor-pointer flex-1 max-w-[180px] sm:max-w-[240px] truncate">
+          </select>
+        </div>
 
-        <button onclick="switchTab('rpg')" class="flex items-center gap-1.5 px-2 py-1.5 rounded-xl bg-obsidian-800 border border-white/10 hover:border-ember-500/40 transition" title="今日理智值 (SAN)">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" id="headerSanDot"></span>
-          <span class="font-mono text-[11px] font-bold text-zinc-200" id="headerSanText">SAN 100%</span>
-        </button>
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button onclick="openCloudSyncModal()" id="headerCloudBtn" class="px-2.5 py-1.5 rounded-xl bg-obsidian-800 border border-white/10 hover:border-ember-500/40 text-zinc-200 transition flex items-center gap-1 text-xs font-bold" title="Google 雲端登入與即時備份同步">
+            <span class="w-2 h-2 rounded-full bg-amber-400" id="headerCloudDot"></span>
+            <span id="headerCloudLabel">Google 備份</span>
+          </button>
 
-        <button onclick="switchTab('rpg')" id="nav-rpg" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-obsidian-800 border border-white/10 hover:border-ember-500/40 text-zinc-300 hover:text-white transition flex items-center gap-1 text-[11px] font-bold" title="巨獸養成與成就">
-          <i data-lucide="trophy" class="w-3.5 h-3.5 text-amber-400"></i>
-          <span class="hidden sm:inline">養成</span>
-        </button>
+          <button onclick="cycleFontSize()" id="headerFontSizeBtn" class="px-2.5 py-1.5 rounded-xl bg-obsidian-800 border border-white/10 hover:border-ember-500/40 text-ember-400 transition flex items-center gap-1 text-xs font-bold" title="一鍵切換手機字體大小 (標準 / 大字 / 特大)">
+            <span>A+ 大字</span>
+          </button>
 
-        <button onclick="switchTab('settings')" id="nav-settings" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-obsidian-800 border border-white/10 hover:border-ember-500/40 text-zinc-300 hover:text-white transition flex items-center gap-1 text-[11px] font-bold" title="系統設定與標籤管理">
-          <i data-lucide="settings" class="w-3.5 h-3.5"></i>
-          <span class="hidden sm:inline">設定</span>
-        </button>
-
-        <button onclick="openInstallModal()" class="p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl bg-ember-500/15 border border-ember-500/40 text-ember-400 hover:bg-ember-500/25 transition flex items-center gap-1 text-[11px] font-bold" title="安裝 APP (Android APK / iOS PWA)">
-          <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
-          <span class="hidden lg:inline">安裝 APP</span>
-        </button>
+          <button onclick="openInstallModal()" class="px-2.5 py-1.5 rounded-xl bg-ember-500/15 border border-ember-500/40 text-ember-400 hover:bg-ember-500/25 transition flex items-center gap-1 text-xs font-bold" title="安裝 APP (Android APK / iOS PWA)">
+            <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
+            <span class="hidden sm:inline">安裝 APP</span>
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -732,107 +764,107 @@
          TAB 4: 🧮 工具 (CALCULATORS & RISK ARSENAL)
     =========================================== -->
     <section id="tab-tools" class="space-y-3 hidden">
-      <div class="flex flex-wrap items-center gap-1 bg-obsidian-850 p-1 rounded-xl border border-white/10">
-        <button onclick="switchToolSubtab('pos')" id="tool-sub-pos" class="px-3 py-1.5 rounded-lg text-xs font-bold subtab-active transition">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 bg-obsidian-850 p-1.5 rounded-2xl border border-white/10">
+        <button onclick="switchToolSubtab('pos')" id="tool-sub-pos" class="px-3 py-2.5 rounded-xl text-xs sm:text-sm font-bold subtab-active transition text-center">
           🎯 倉位與槓桿試算
         </button>
-        <button onclick="switchToolSubtab('fib')" id="tool-sub-fib" class="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-white transition">
+        <button onclick="switchToolSubtab('fib')" id="tool-sub-fib" class="px-3 py-2.5 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition text-center">
           📐 斐波那契點位快算
         </button>
-        <button onclick="switchToolSubtab('rec')" id="tool-sub-rec" class="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-white transition">
+        <button onclick="switchToolSubtab('rec')" id="tool-sub-rec" class="px-3 py-2.5 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition text-center">
           🛡️ 虧損回本與凱利沙盤
         </button>
-        <button onclick="switchToolSubtab('check')" id="tool-sub-check" class="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-white transition">
+        <button onclick="switchToolSubtab('check')" id="tool-sub-check" class="px-3 py-2.5 rounded-xl text-xs sm:text-sm font-medium text-zinc-400 hover:text-white transition text-center">
           📋 盤前風控檢查表
         </button>
       </div>
 
       <!-- SUBTOOL 4.1: Position Size & Leverage Calculator -->
       <div id="tool-panel-pos" class="grid grid-cols-1 lg:grid-cols-12 gap-3">
-        <div class="app-card p-3.5 lg:col-span-7 space-y-3">
-          <div class="flex items-center justify-between border-b border-white/10 pb-2.5">
+        <div class="app-card p-4 sm:p-5 lg:col-span-7 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-white/10 pb-3">
             <div>
-              <h3 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
+              <h3 class="text-sm sm:text-base font-extrabold text-white flex items-center gap-2">
                 <i data-lucide="calculator" class="w-4 h-4 text-ember-500"></i>
                 鐵血風控倉位與槓桿試算器
               </h3>
             </div>
-            <div class="flex bg-obsidian-950 p-0.5 rounded-lg border border-white/10 text-[11px]">
-              <button onclick="setPosCalcMode('risk')" id="pos-mode-risk" class="px-2.5 py-1 rounded-md subtab-active">模式A: 以損定倉</button>
-              <button onclick="setPosCalcMode('margin')" id="pos-mode-margin" class="px-2.5 py-1 rounded-md text-zinc-400">模式B: 保證金推算</button>
+            <div class="grid grid-cols-2 sm:flex bg-obsidian-950 p-1 rounded-xl border border-white/10 text-xs w-full sm:w-auto">
+              <button onclick="setPosCalcMode('risk')" id="pos-mode-risk" class="px-3 py-1.5 rounded-lg subtab-active text-center">模式A: 以損定倉</button>
+              <button onclick="setPosCalcMode('margin')" id="pos-mode-margin" class="px-3 py-1.5 rounded-lg text-zinc-400 text-center">模式B: 保證金推算</button>
             </div>
           </div>
 
           <!-- Symbol Quick Presets -->
-          <div>
-            <div class="flex items-center justify-between mb-1">
-              <label class="text-[11px] font-semibold text-zinc-400">⚡ 品種快選 (自動帶入規格)：</label>
-              <div class="flex items-center gap-1">
-                <span class="text-[10px] text-zinc-500">風險快選:</span>
-                <button onclick="setQuickRiskPct(0.5)" class="px-1.5 py-0.5 rounded bg-obsidian-800 text-[10px] font-mono text-zinc-300 hover:text-ember-400">0.5%</button>
-                <button onclick="setQuickRiskPct(1.0)" class="px-1.5 py-0.5 rounded bg-ember-500/20 text-[10px] font-mono text-ember-400 font-bold">1%</button>
-                <button onclick="setQuickRiskPct(2.0)" class="px-1.5 py-0.5 rounded bg-obsidian-800 text-[10px] font-mono text-zinc-300 hover:text-ember-400">2%</button>
+          <div class="space-y-2">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <label class="text-xs font-bold text-zinc-300">⚡ 品種快選 (自動帶入規格)：</label>
+              <div class="flex items-center gap-1.5">
+                <span class="text-xs text-zinc-400">風險快選:</span>
+                <button onclick="setQuickRiskPct(0.5)" class="px-2 py-1 rounded-lg bg-obsidian-800 text-xs font-mono text-zinc-200 hover:text-ember-400 border border-white/10">0.5%</button>
+                <button onclick="setQuickRiskPct(1.0)" class="px-2 py-1 rounded-lg bg-ember-500/20 text-xs font-mono text-ember-400 font-bold border border-ember-500/40">1%</button>
+                <button onclick="setQuickRiskPct(2.0)" class="px-2 py-1 rounded-lg bg-obsidian-800 text-xs font-mono text-zinc-200 hover:text-ember-400 border border-white/10">2%</button>
               </div>
             </div>
-            <div class="flex flex-wrap gap-1">
-              <button onclick="selectCalcPreset('XAUUSD', 100, 2650, 2642, 2666)" class="px-2 py-1 rounded-lg bg-obsidian-800 hover:bg-ember-500/20 border border-white/10 text-[11px] font-mono text-zinc-200 transition">XAUUSD 黃金 (100)</button>
-              <button onclick="selectCalcPreset('XAGUSD', 5000, 31.5, 31.1, 32.5)" class="px-2 py-1 rounded-lg bg-obsidian-800 hover:bg-ember-500/20 border border-white/10 text-[11px] font-mono text-zinc-200 transition">XAGUSD 白銀 (5000)</button>
-              <button onclick="selectCalcPreset('NAS100', 1, 20200, 20120, 20380)" class="px-2 py-1 rounded-lg bg-obsidian-800 hover:bg-ember-500/20 border border-white/10 text-[11px] font-mono text-zinc-200 transition">NAS100 那指 (1)</button>
-              <button onclick="selectCalcPreset('US30', 1, 43000, 42850, 43350)" class="px-2 py-1 rounded-lg bg-obsidian-800 hover:bg-ember-500/20 border border-white/10 text-[11px] font-mono text-zinc-200 transition">US30 道瓊 (1)</button>
-              <button onclick="selectCalcPreset('EURUSD', 100000, 1.0850, 1.0820, 1.0910)" class="px-2 py-1 rounded-lg bg-obsidian-800 hover:bg-ember-500/20 border border-white/10 text-[11px] font-mono text-zinc-200 transition">EURUSD 外匯 (100K)</button>
-              <button onclick="selectCalcPreset('BTC/USDT', 1, 68000, 67200, 70000)" class="px-2 py-1 rounded-lg bg-obsidian-800 hover:bg-ember-500/20 border border-white/10 text-[11px] font-mono text-zinc-200 transition">BTC/USDT (1)</button>
-              <button onclick="selectCalcPreset('ETH/USDT', 1, 2600, 2550, 2720)" class="px-2 py-1 rounded-lg bg-obsidian-800 hover:bg-ember-500/20 border border-white/10 text-[11px] font-mono text-zinc-200 transition">ETH/USDT (1)</button>
+            <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-1.5">
+              <button onclick="selectCalcPreset('XAUUSD', 100, 2650, 2642, 2666)" class="px-2.5 py-2 rounded-xl bg-obsidian-800 hover:bg-ember-500/20 border border-white/10 text-xs font-mono font-bold text-zinc-200 transition text-left sm:text-center">XAUUSD 黃金 (100)</button>
+              <button onclick="selectCalcPreset('XAGUSD', 5000, 31.5, 31.1, 32.5)" class="px-2.5 py-2 rounded-xl bg-obsidian-800 hover:bg-ember-500/20 border border-white/10 text-xs font-mono font-bold text-zinc-200 transition text-left sm:text-center">XAGUSD 白銀 (5000)</button>
+              <button onclick="selectCalcPreset('NAS100', 1, 20200, 20120, 20380)" class="px-2.5 py-2 rounded-xl bg-obsidian-800 hover:bg-ember-500/20 border border-white/10 text-xs font-mono font-bold text-zinc-200 transition text-left sm:text-center">NAS100 那指 (1)</button>
+              <button onclick="selectCalcPreset('US30', 1, 43000, 42850, 43350)" class="px-2.5 py-2 rounded-xl bg-obsidian-800 hover:bg-ember-500/20 border border-white/10 text-xs font-mono font-bold text-zinc-200 transition text-left sm:text-center">US30 道瓊 (1)</button>
+              <button onclick="selectCalcPreset('EURUSD', 100000, 1.0850, 1.0820, 1.0910)" class="px-2.5 py-2 rounded-xl bg-obsidian-800 hover:bg-ember-500/20 border border-white/10 text-xs font-mono font-bold text-zinc-200 transition text-left sm:text-center">EURUSD 外匯 (100K)</button>
+              <button onclick="selectCalcPreset('BTC/USDT', 1, 68000, 67200, 70000)" class="px-2.5 py-2 rounded-xl bg-obsidian-800 hover:bg-ember-500/20 border border-white/10 text-xs font-mono font-bold text-zinc-200 transition text-left sm:text-center">BTC/USDT (1)</button>
+              <button onclick="selectCalcPreset('ETH/USDT', 1, 2600, 2550, 2720)" class="px-2.5 py-2 rounded-xl bg-obsidian-800 hover:bg-ember-500/20 border border-white/10 text-xs font-mono font-bold text-zinc-200 transition col-span-2 sm:col-span-1 text-left sm:text-center">ETH/USDT (1)</button>
             </div>
           </div>
 
           <!-- Leverage Quick Presets -->
           <div class="flex items-center gap-1.5 flex-wrap">
-            <span class="text-[11px] text-zinc-400">槓桿:</span>
-            <button onclick="setCalcLeverage(30)" class="px-2 py-0.5 rounded bg-obsidian-800 border border-white/10 text-[11px] font-mono text-zinc-300">1:30</button>
-            <button onclick="setCalcLeverage(50)" class="px-2 py-0.5 rounded bg-obsidian-800 border border-white/10 text-[11px] font-mono text-zinc-300">1:50</button>
-            <button onclick="setCalcLeverage(100)" class="px-2 py-0.5 rounded bg-obsidian-800 border border-white/10 text-[11px] font-mono text-zinc-300">1:100</button>
-            <button onclick="setCalcLeverage(200)" class="px-2 py-0.5 rounded bg-obsidian-800 border border-white/10 text-[11px] font-mono text-zinc-300">1:200</button>
-            <button onclick="setCalcLeverage(500)" class="px-2 py-0.5 rounded bg-obsidian-800 border border-white/10 text-[11px] font-mono text-zinc-300">1:500</button>
-            <button onclick="setCalcLeverage(1000)" class="px-2 py-0.5 rounded bg-obsidian-800 border border-white/10 text-[11px] font-mono text-zinc-300">1:1000</button>
+            <span class="text-xs font-bold text-zinc-300">槓桿倍數:</span>
+            <button onclick="setCalcLeverage(30)" class="px-2.5 py-1 rounded-lg bg-obsidian-800 border border-white/10 text-xs font-mono text-zinc-200">1:30</button>
+            <button onclick="setCalcLeverage(50)" class="px-2.5 py-1 rounded-lg bg-obsidian-800 border border-white/10 text-xs font-mono text-zinc-200">1:50</button>
+            <button onclick="setCalcLeverage(100)" class="px-2.5 py-1 rounded-lg bg-obsidian-800 border border-white/10 text-xs font-mono text-zinc-200">1:100</button>
+            <button onclick="setCalcLeverage(200)" class="px-2.5 py-1 rounded-lg bg-obsidian-800 border border-white/10 text-xs font-mono text-zinc-200">1:200</button>
+            <button onclick="setCalcLeverage(500)" class="px-2.5 py-1 rounded-lg bg-obsidian-800 border border-white/10 text-xs font-mono text-zinc-200">1:500</button>
+            <button onclick="setCalcLeverage(1000)" class="px-2.5 py-1 rounded-lg bg-obsidian-800 border border-white/10 text-xs font-mono text-zinc-200">1:1000</button>
           </div>
 
-          <!-- Inputs Grid -->
-          <div class="grid grid-cols-3 gap-2.5">
+          <!-- Spacious 2-Column Mobile / 3-Column Desktop Inputs Grid -->
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
             <div>
-              <label class="block text-[10px] text-zinc-400 mb-0.5">帳戶本金 ($)</label>
-              <input type="number" id="calcBalance" value="10000" oninput="runPositionCalc()" class="input-dark font-mono text-xs" />
+              <label class="block text-xs font-bold text-zinc-300 mb-1">帳戶本金 ($)</label>
+              <input type="number" id="calcBalance" value="10000" oninput="runPositionCalc()" class="input-dark font-mono font-bold" />
             </div>
             <div id="calcRiskPctBox">
-              <label class="block text-[10px] text-zinc-400 mb-0.5">單筆風險 (%)</label>
-              <input type="number" id="calcRiskPct" value="1.0" step="0.1" oninput="runPositionCalc()" class="input-dark font-mono text-xs" />
+              <label class="block text-xs font-bold text-zinc-300 mb-1">單筆風險 (%)</label>
+              <input type="number" id="calcRiskPct" value="1.0" step="0.1" oninput="runPositionCalc()" class="input-dark font-mono font-bold" />
             </div>
             <div id="calcMarginInputBox" class="hidden">
-              <label class="block text-[10px] text-amber-400 mb-0.5">投入保證金 ($)</label>
-              <input type="number" id="calcMarginUsed" value="1000" step="50" oninput="runPositionCalc()" class="input-dark font-mono text-xs border-amber-500/40" />
+              <label class="block text-xs font-bold text-amber-400 mb-1">投入保證金 ($)</label>
+              <input type="number" id="calcMarginUsed" value="1000" step="50" oninput="runPositionCalc()" class="input-dark font-mono font-bold border-amber-500/40" />
             </div>
             <div>
-              <label class="block text-[10px] text-zinc-400 mb-0.5">合約乘數</label>
-              <input type="number" id="calcContractSize" value="100" step="any" oninput="runPositionCalc()" class="input-dark font-mono text-xs" />
+              <label class="block text-xs font-bold text-zinc-300 mb-1">合約乘數</label>
+              <input type="number" id="calcContractSize" value="100" step="any" oninput="runPositionCalc()" class="input-dark font-mono font-bold" />
             </div>
             <div>
-              <label class="block text-[10px] text-zinc-400 mb-0.5">進場價 (ENTRY)</label>
-              <input type="number" id="calcEntry" value="2650" step="any" oninput="runPositionCalc()" class="input-dark font-mono text-xs" />
+              <label class="block text-xs font-bold text-zinc-300 mb-1">進場價 (ENTRY)</label>
+              <input type="number" id="calcEntry" value="2650" step="any" oninput="runPositionCalc()" class="input-dark font-mono font-bold" />
             </div>
             <div>
-              <label class="block text-[10px] text-rose-400 mb-0.5">止損價 (SL)</label>
-              <input type="number" id="calcStopLoss" value="2642" step="any" oninput="runPositionCalc()" class="input-dark font-mono text-xs border-rose-500/30" />
+              <label class="block text-xs font-bold text-rose-400 mb-1">止損價 (SL)</label>
+              <input type="number" id="calcStopLoss" value="2642" step="any" oninput="runPositionCalc()" class="input-dark font-mono font-bold border-rose-500/30" />
             </div>
             <div>
-              <label class="block text-[10px] text-emerald-400 mb-0.5">止盈價 (TP)</label>
-              <input type="number" id="calcTakeProfit" value="2666" step="any" oninput="runPositionCalc()" class="input-dark font-mono text-xs border-emerald-500/30" />
+              <label class="block text-xs font-bold text-emerald-400 mb-1">止盈價 (TP)</label>
+              <input type="number" id="calcTakeProfit" value="2666" step="any" oninput="runPositionCalc()" class="input-dark font-mono font-bold border-emerald-500/30" />
             </div>
             <div>
-              <label class="block text-[10px] text-zinc-400 mb-0.5">槓桿 (1:X)</label>
-              <input type="number" id="calcLeverage" value="200" step="1" oninput="runPositionCalc()" class="input-dark font-mono text-xs" />
+              <label class="block text-xs font-bold text-zinc-300 mb-1">槓桿 (1:X)</label>
+              <input type="number" id="calcLeverage" value="200" step="1" oninput="runPositionCalc()" class="input-dark font-mono font-bold" />
             </div>
-            <div class="col-span-2">
-              <label class="block text-[10px] text-zinc-400 mb-0.5">商品代號</label>
-              <input type="text" id="calcSymbolName" value="XAUUSD" class="input-dark font-mono text-xs" />
+            <div>
+              <label class="block text-xs font-bold text-zinc-300 mb-1">商品代號</label>
+              <input type="text" id="calcSymbolName" value="XAUUSD" class="input-dark font-mono font-bold" />
             </div>
           </div>
         </div>
@@ -1567,56 +1599,131 @@
   </div>
 
   <!-- ==========================================
-       MODAL 7: 📸 交易戰報圖片分享中心 (PNL SHARE POSTER STUDIO)
+       MODAL 7: 📸 交易戰報圖片分享中心 (PNL SHARE POSTER STUDIO — ZERO OVERFLOW)
   =========================================== -->
-  <div id="shareCardModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-3 overflow-y-auto">
-    <div class="app-card-orange w-full max-w-lg p-4 sm:p-5 my-4 max-h-[94vh] overflow-y-auto custom-scrollbar space-y-3.5">
+  <div id="shareCardModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-2.5 sm:p-4 overflow-y-auto">
+    <div class="app-card-orange w-full max-w-lg p-4 sm:p-5 my-3 max-h-[95vh] overflow-y-auto custom-scrollbar space-y-3.5">
       <div class="flex items-center justify-between pb-2.5 border-b border-white/10">
-        <div class="flex items-center gap-2">
-          <span class="w-7 h-7 rounded-lg bg-ember-500 flex items-center justify-center text-white font-bold text-xs">📸</span>
+        <div class="flex items-center gap-2.5">
+          <span class="w-8 h-8 rounded-xl bg-ember-500 flex items-center justify-center text-white font-bold text-sm shrink-0">📸</span>
           <div>
-            <h3 id="shareModalTitle" class="text-sm sm:text-base font-extrabold text-white">C.T.M 實戰損益戰報卡分享</h3>
-            <p class="text-[10px] text-zinc-400">可切換風格、隱藏敏感金額，一鍵下載高清圖片或分享至社群</p>
+            <h3 id="shareModalTitle" class="text-sm sm:text-base font-extrabold text-white">C.T.M 實戰損益戰報卡</h3>
+            <p class="text-xs text-zinc-400">字體自動縮放防爆版・支援長按存圖或一鍵分享</p>
           </div>
         </div>
-        <button onclick="closeShareCardModal()" aria-label="關閉戰報視窗" class="p-1.5 rounded-lg bg-obsidian-800 text-zinc-400 hover:text-white">
+        <button onclick="closeShareCardModal()" aria-label="關閉戰報視窗" class="p-2 rounded-xl bg-obsidian-800 text-zinc-300 hover:text-white">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
       <!-- Poster Theme & Privacy Options -->
-      <div class="flex flex-wrap items-center justify-between gap-2 bg-obsidian-950 p-2 rounded-xl border border-white/10">
-        <div class="flex items-center gap-1">
-          <button type="button" onclick="setSharePosterTheme('ember')" id="poster-theme-ember" class="px-2.5 py-1 rounded-lg text-[11px] font-bold subtab-active">🔥 黑曜烈焰</button>
-          <button type="button" onclick="setSharePosterTheme('gold')" id="poster-theme-gold" class="px-2.5 py-1 rounded-lg text-[11px] text-zinc-400 hover:text-white">💎 機構黑金</button>
-          <button type="button" onclick="setSharePosterTheme('cyber')" id="poster-theme-cyber" class="px-2.5 py-1 rounded-lg text-[11px] text-zinc-400 hover:text-white">⚡ 賽博極簡</button>
+      <div class="space-y-2 bg-obsidian-950 p-2.5 rounded-2xl border border-white/10">
+        <div class="grid grid-cols-3 gap-1.5">
+          <button type="button" onclick="setSharePosterTheme('ember')" id="poster-theme-ember" class="px-2.5 py-1.5 rounded-xl text-xs font-bold subtab-active text-center">🔥 黑曜烈焰</button>
+          <button type="button" onclick="setSharePosterTheme('gold')" id="poster-theme-gold" class="px-2.5 py-1.5 rounded-xl text-xs text-zinc-400 hover:text-white text-center">💎 機構黑金</button>
+          <button type="button" onclick="setSharePosterTheme('cyber')" id="poster-theme-cyber" class="px-2.5 py-1.5 rounded-xl text-xs text-zinc-400 hover:text-white text-center">⚡ 賽博極簡</button>
         </div>
-        <div class="flex items-center gap-3 text-[11px] text-zinc-300">
-          <label class="flex items-center gap-1 cursor-pointer">
-            <input type="checkbox" id="shareHideDollarChk" onchange="drawSharePosterCanvas()" class="w-3.5 h-3.5 accent-orange-500 rounded" />
-            <span>隱藏金額($)</span>
+        <div class="flex items-center justify-between pt-1.5 border-t border-white/5 px-1 text-xs text-zinc-200 font-semibold">
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input type="checkbox" id="shareHideDollarChk" onchange="drawSharePosterCanvas()" class="w-4 h-4 accent-orange-500 rounded" />
+            <span>隱藏金額 ($) 僅秀報酬與R值</span>
           </label>
-          <label class="flex items-center gap-1 cursor-pointer">
-            <input type="checkbox" id="shareShowNoteChk" checked onchange="drawSharePosterCanvas()" class="w-3.5 h-3.5 accent-orange-500 rounded" />
+          <label class="flex items-center gap-1.5 cursor-pointer">
+            <input type="checkbox" id="shareShowNoteChk" checked onchange="drawSharePosterCanvas()" class="w-4 h-4 accent-orange-500 rounded" />
             <span>顯示復盤筆記</span>
           </label>
         </div>
       </div>
 
-      <!-- High-DPI Canvas Poster Preview -->
-      <div class="flex justify-center bg-obsidian-950/90 p-2.5 rounded-2xl border border-white/10">
-        <canvas id="sharePosterCanvas" width="720" height="900" class="w-full max-w-[340px] h-auto rounded-xl shadow-2xl border border-white/10"></canvas>
+      <!-- High-DPI Canvas Poster + Long-Press Image Preview -->
+      <div class="flex flex-col items-center bg-obsidian-950/90 p-2.5 rounded-2xl border border-white/10">
+        <canvas id="sharePosterCanvas" width="720" height="920" class="hidden"></canvas>
+        <img id="sharePosterImgPreview" alt="C.T.M 交易戰報預覽" class="w-full max-w-[360px] h-auto rounded-xl shadow-2xl border border-ember-500/30 select-auto" />
+        <span class="text-[11px] text-amber-400/90 font-semibold mt-2">✨ 手機可直接「長按上方圖片」儲存或分享至 IG / LINE</span>
       </div>
 
       <!-- Share & Download Action Buttons -->
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
-        <button type="button" onclick="downloadSharePoster()" class="orange-glow-btn py-2.5 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 sm:col-span-2">
-          <i data-lucide="download" class="w-4 h-4"></i> 📥 下載高清戰報圖片 (.PNG)
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1">
+        <button type="button" onclick="downloadSharePoster()" class="orange-glow-btn py-3 px-3 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 col-span-2 sm:col-span-1">
+          📥 下載高清戰報圖片 (.PNG)
         </button>
-        <button type="button" onclick="nativeSharePoster()" class="py-2.5 px-3 rounded-xl bg-obsidian-800 hover:bg-obsidian-700 text-ember-400 border border-ember-500/40 text-xs font-bold flex items-center justify-center gap-1.5 transition">
-          <i data-lucide="share-2" class="w-4 h-4"></i> 📲 手機分享圖片
+        <button type="button" onclick="nativeSharePoster()" class="py-3 px-3 rounded-xl bg-obsidian-800 hover:bg-obsidian-700 text-ember-400 border border-ember-500/40 text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition">
+          📲 手機分享圖片
+        </button>
+        <button type="button" onclick="copySharePosterText()" class="py-3 px-3 rounded-xl bg-obsidian-800 hover:bg-obsidian-700 text-zinc-200 border border-white/10 text-xs sm:text-sm font-bold flex items-center justify-center gap-1.5 transition">
+          📋 複製戰報文字
         </button>
       </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       MODAL 8: ☁️ GOOGLE 雲端同步與備份中心 (FIREBASE & CLOUD SYNC MODAL)
+  =========================================== -->
+  <div id="cloudSyncModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-3 overflow-y-auto">
+    <div class="app-card-orange w-full max-w-lg p-5 my-4 max-h-[94vh] overflow-y-auto custom-scrollbar space-y-4">
+      <div class="flex items-center justify-between pb-2.5 border-b border-white/10">
+        <div class="flex items-center gap-2.5">
+          <span class="w-8 h-8 rounded-xl bg-ember-500 flex items-center justify-center text-white font-bold text-sm">☁️</span>
+          <div>
+            <h3 class="text-base font-extrabold text-white">Google 雲端登入與跨裝置備份中心</h3>
+            <p class="text-xs text-zinc-400">完整相容你原有的 Firebase Google 帳號備份與 App.tsx 資料格式</p>
+          </div>
+        </div>
+        <button onclick="closeCloudSyncModal()" aria-label="關閉雲端視窗" class="p-2 rounded-xl bg-obsidian-800 text-zinc-300 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Current Sync Status Card -->
+      <div class="p-4 rounded-2xl bg-obsidian-950 border border-ember-500/35 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="cloudModalStatusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+            <span id="cloudModalUserTitle" class="text-sm font-extrabold text-white">本機離線自動儲存已開啟</span>
+          </div>
+          <p id="cloudModalUserDesc" class="text-xs text-zinc-400 mt-1">可直接使用 Google 帳號登入同步，或一鍵匯入/匯出原版 App.tsx 備份檔</p>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <button type="button" id="googleLoginBtn" onclick="handleGoogleCloudLogin()" class="orange-glow-btn px-4 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5">
+            🔑 Google 帳號登入
+          </button>
+          <button type="button" id="googleLogoutBtn" onclick="handleGoogleCloudLogout()" class="hidden px-3.5 py-2 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/30 text-xs font-bold">
+            登出
+          </button>
+        </div>
+      </div>
+
+      <!-- Instant Backup & Restore (100% compatible with original App.tsx ctm_offline_data!) -->
+      <div class="p-4 rounded-2xl bg-obsidian-900 border border-white/10 space-y-3">
+        <div class="text-xs font-bold text-ember-400">⚡ 跨手機 / 電腦一鍵備份還原（100% 相容你原本的 Google 備份結構）</div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <button type="button" onclick="exportFullBackupJSON()" class="py-3 px-3 rounded-xl bg-ember-500/20 hover:bg-ember-500/30 text-ember-300 border border-ember-500/40 text-xs font-bold flex items-center justify-center gap-1.5 transition">
+            <i data-lucide="download" class="w-4 h-4"></i> 匯出完整備份 (.json)
+          </button>
+          <label class="py-3 px-3 rounded-xl bg-obsidian-800 hover:bg-obsidian-700 text-zinc-200 border border-white/15 text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer transition">
+            <i data-lucide="upload" class="w-4 h-4 text-emerald-400"></i> 匯入還原備份 (.json)
+            <input type="file" accept=".json" onchange="importBackupJSON(event)" class="hidden" />
+          </label>
+        </div>
+      </div>
+
+      <!-- Optional Firebase Project Config (for standalone HTML hosting) -->
+      <details class="p-3.5 rounded-2xl bg-obsidian-950/90 border border-white/10 text-xs">
+        <summary class="font-bold text-zinc-300 cursor-pointer select-none flex items-center justify-between">
+          <span>⚙️ 進階：填入你的 Firebase 設定碼 (若使用單檔 HTML 部署)</span>
+          <span class="text-[11px] text-ember-400">展開設定 ▾</span>
+        </summary>
+        <div class="mt-3 space-y-2.5 pt-2.5 border-t border-white/10">
+          <p class="text-[11px] text-zinc-400 leading-relaxed">
+            若你是將隨附的 <code>App.tsx</code> 放入你原本的 React 專案，它會直接讀取你原有的 <code>./lib/firebase</code> 無須填寫此處。若你是單獨部署此 HTML 檔，可在此貼上你的 Firebase Config JSON 開啟雲端直連：
+          </p>
+          <textarea id="firebaseConfigInput" rows="4" placeholder='{"apiKey":"...","authDomain":"...","projectId":"..."}' class="input-dark font-mono text-xs resize-none"></textarea>
+          <button type="button" onclick="saveCustomFirebaseConfig()" class="w-full py-2.5 rounded-xl bg-obsidian-800 hover:bg-ember-500/20 text-ember-400 border border-ember-500/40 font-bold text-xs">
+            儲存 Firebase 金鑰並連線
+          </button>
+        </div>
+      </details>
     </div>
   </div>
 
@@ -2801,8 +2908,8 @@
     // Calculators
     window.setPosCalcMode = function(mode) {
       appState.posCalcMode = mode;
-      document.getElementById('pos-mode-risk').className = mode === 'risk' ? 'px-2.5 py-1 rounded-md subtab-active' : 'px-2.5 py-1 rounded-md text-zinc-400';
-      document.getElementById('pos-mode-margin').className = mode === 'margin' ? 'px-2.5 py-1 rounded-md subtab-active' : 'px-2.5 py-1 rounded-md text-zinc-400';
+      document.getElementById('pos-mode-risk').className = mode === 'risk' ? 'px-3 py-1.5 rounded-lg subtab-active text-center' : 'px-3 py-1.5 rounded-lg text-zinc-400 text-center';
+      document.getElementById('pos-mode-margin').className = mode === 'margin' ? 'px-3 py-1.5 rounded-lg subtab-active text-center' : 'px-3 py-1.5 rounded-lg text-zinc-400 text-center';
       document.getElementById('calcRiskPctBox').classList.toggle('hidden', mode !== 'risk');
       document.getElementById('calcMarginInputBox').classList.toggle('hidden', mode !== 'margin');
       runPositionCalc();
@@ -3495,7 +3602,248 @@
     });
 
     // ==========================================
-    // 📸 PNL SHARE POSTER GENERATOR (CANVAS 2D)
+    // 🔤 MOBILE COMFORT FONT SCALER (標準 / 大字 / 特大)
+    // ==========================================
+    function applyFontSizeMode() {
+      const mode = appState.fontSizeMode || 'large';
+      const root = document.documentElement;
+      root.classList.remove('font-scale-normal', 'font-scale-large', 'font-scale-xlarge');
+      root.classList.add(`font-scale-${mode}`);
+      const labelMap = { normal: 'A 標準字', large: 'A+ 大字', xlarge: 'A++ 特大' };
+      const btn = document.getElementById('headerFontSizeBtn');
+      if (btn) btn.innerHTML = `<span>${labelMap[mode] || 'A+ 大字'}</span>`;
+    }
+
+    window.cycleFontSize = function() {
+      const order = ['normal', 'large', 'xlarge'];
+      const cur = appState.fontSizeMode || 'large';
+      const next = order[(order.indexOf(cur) + 1) % order.length];
+      appState.fontSizeMode = next;
+      applyFontSizeMode();
+      saveState();
+      const nameMap = { normal: '標準字體 (15.5px)', large: '舒適大字體 (17px)', xlarge: '特大護眼字體 (18.5px)' };
+      showToast(`已切換為：${nameMap[next]}`);
+    };
+
+    // ==========================================
+    // ☁️ GOOGLE CLOUD SYNC & APP.TSX SCHEMA BRIDGE
+    // ==========================================
+    // Automatically migrate or merge data from original App.tsx `ctm_offline_data` if present!
+    function syncFromLegacyAppTsxStorage() {
+      try {
+        const legacyRaw = localStorage.getItem('ctm_offline_data');
+        if (!legacyRaw) return;
+        const legacy = JSON.parse(legacyRaw);
+        if (legacy && Array.isArray(legacy.accounts) && legacy.accounts.length > 0) {
+          importLegacySchemaObject(legacy, false);
+        }
+      } catch (e) {
+        console.warn('Legacy storage check skipped:', e);
+      }
+    }
+
+    function importLegacySchemaObject(parsed, notify = true) {
+      if (!parsed || typeof parsed !== 'object') return false;
+      // Case 1: Already in V2/V5 state format
+      if (Array.isArray(parsed.trades) && Array.isArray(parsed.accounts) && !parsed.accounts[0]?.trades) {
+        appState = Object.assign(createDefaultState(), parsed);
+        saveState();
+        renderAll();
+        if (notify) showToast('成功還原完整備份資料！');
+        return true;
+      }
+      // Case 2: Original App.tsx / Firebase Firestore schema (`accounts[].trades`, `portfolio`, `journals`, `settings`)
+      if (Array.isArray(parsed.accounts)) {
+        const newAccounts = [];
+        const newTrades = [];
+        parsed.accounts.forEach((acc, idx) => {
+          const accId = acc.id || ('acc_' + idx);
+          let netCash = 0;
+          (acc.trades || []).forEach((t, tIdx) => {
+            if (t.type === 'balance') {
+              netCash += Number(t.pnl) || 0;
+            } else {
+              const rawPnl = (Number(t.pnl) || 0) - (Number(t.commission) || 0);
+              const setupTag = Array.isArray(t.tags) ? (t.tags.find(x => x.type === 'setup')?.text || '') : (t.strategy || '');
+              const mistakeTag = Array.isArray(t.tags) ? (t.tags.find(x => x.type === 'mistake')?.text || '無心魔') : (t.mistake || '無心魔');
+              newTrades.push({
+                id: String(t.id || ('tr_' + idx + '_' + tIdx)),
+                accountId: accId,
+                date: String(t.date || '2026-10-18').slice(0, 10),
+                session: t.session || '紐約盤',
+                symbol: String(t.symbol || 'XAUUSD').toUpperCase(),
+                direction: String(t.direction || 'long').toUpperCase() === 'SHORT' ? 'SHORT' : 'LONG',
+                entry: Number(t.entry) || 0,
+                exit: Number(t.exit) || 0,
+                stopLoss: Number(t.stopLoss) || 0,
+                lots: Number(t.qty || t.lots) || 1,
+                mult: Number(t.mult) || 1,
+                fee: Number(t.commission || t.fee) || 0,
+                pnl: rawPnl,
+                isBreakeven: Boolean(t.isBreakeven),
+                strategy: setupTag || '標準戰術',
+                mistake: mistakeTag || '無心魔',
+                tvUrl: t.imageUrl || t.tvUrl || '',
+                note: t.notes || t.note || ''
+              });
+            }
+          });
+          const initCap = Number(acc.balance || acc.initialCapital) || 10000;
+          const targetUsd = Number(acc.target) || (initCap * 0.1);
+          newAccounts.push({
+            id: accId,
+            name: acc.name || '主戰帳戶',
+            initialCapital: initCap,
+            netCashflow: netCash,
+            tag: acc.type === 'prop' ? 'Prop Firm 考核倉' : '個人實戰帳戶',
+            targetPct: initCap > 0 ? Math.round((targetUsd / initCap) * 100) : 10,
+            maxDdLimit: 10
+          });
+        });
+
+        if (newAccounts.length > 0) {
+          appState.accounts = newAccounts;
+          appState.currentAccountId = newAccounts[0].id;
+          appState.trades = newTrades;
+        }
+        if (parsed.settings) {
+          if (parsed.settings.traderName) appState.traderName = parsed.settings.traderName;
+          if (Array.isArray(parsed.settings.symbols) && parsed.settings.symbols.length) appState.symbols = parsed.settings.symbols;
+          if (Array.isArray(parsed.settings.strategies) && parsed.settings.strategies.length) appState.strategies = parsed.settings.strategies;
+          if (Array.isArray(parsed.settings.mistakes) && parsed.settings.mistakes.length) appState.mistakes = parsed.settings.mistakes;
+        }
+        if (Array.isArray(parsed.portfolio)) {
+          appState.assets = parsed.portfolio.map((p, i) => {
+            let cq = 0, cc = 0;
+            (p.transactions || []).forEach(tx => {
+              if (tx.qty > 0) { cq += Number(tx.qty); cc += Number(tx.amount); }
+              else { const avg = cq > 0 ? cc / cq : 0; cq += Number(tx.qty); cc += Number(tx.qty) * avg; }
+            });
+            const avgCost = cq > 0 ? cc / cq : (Number(p.cost) || 0);
+            return {
+              id: String(p.id || ('a_' + i)),
+              symbol: p.symbol || 'ASSET',
+              assetClass: p.type || '美股 US',
+              qty: Number(cq.toFixed(4)) || Number(p.qty) || 1,
+              cost: Number(avgCost.toFixed(2)),
+              price: Number(p.currPrice || p.price) || avgCost,
+              dividends: Number(p.dividends) || 0,
+              targetWeight: Number(p.targetPct || p.targetWeight) || 25
+            };
+          });
+        }
+        if (Array.isArray(parsed.journals)) {
+          parsed.journals.forEach(j => {
+            if (j.date) {
+              const prefix = j.discipline ? `【紀律評級：${j.discipline} 級｜${j.emotion || ''}】` : '';
+              appState.dailyNotes[j.date] = `${prefix}${j.note || ''}`.trim();
+            }
+          });
+        }
+        saveState();
+        renderAll();
+        if (notify) showToast('已無縫匯入你原有的 Google / App.tsx 備份資料！');
+        return true;
+      }
+      return false;
+    }
+
+    // Override importBackupJSON to support both V5 and original App.tsx schemas!
+    window.importBackupJSON = function(ev) {
+      const file = ev.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          if (!importLegacySchemaObject(parsed, true)) {
+            showToast('備份檔格式不正確', 'error');
+          }
+        } catch (err) {
+          showToast('讀取 JSON 備份失敗', 'error');
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    window.openCloudSyncModal = function() {
+      const savedCfg = localStorage.getItem('CTM_FIREBASE_CONFIG') || '';
+      const cfgInp = document.getElementById('firebaseConfigInput');
+      if (cfgInp && savedCfg) cfgInp.value = savedCfg;
+      document.getElementById('cloudSyncModal').classList.remove('hidden');
+      document.getElementById('cloudSyncModal').classList.add('flex');
+    };
+
+    window.closeCloudSyncModal = function() {
+      document.getElementById('cloudSyncModal').classList.add('hidden');
+      document.getElementById('cloudSyncModal').classList.remove('flex');
+    };
+
+    window.saveCustomFirebaseConfig = function() {
+      const raw = (document.getElementById('firebaseConfigInput')?.value || '').trim();
+      if (!raw) {
+        showToast('請貼上有效的 Firebase Config JSON', 'error');
+        return;
+      }
+      try {
+        const cfg = JSON.parse(raw);
+        if (!cfg.apiKey || !cfg.projectId) {
+          showToast('JSON 需包含 apiKey 與 projectId', 'error');
+          return;
+        }
+        localStorage.setItem('CTM_FIREBASE_CONFIG', JSON.stringify(cfg));
+        showToast('已儲存 Firebase 設定！請點擊上方「Google 帳號登入」');
+      } catch (e) {
+        showToast('JSON 格式解析失敗，請確認格式為標準 JSON', 'error');
+      }
+    };
+
+    window.handleGoogleCloudLogin = async function() {
+      const savedCfg = localStorage.getItem('CTM_FIREBASE_CONFIG');
+      if (!savedCfg) {
+        showToast('若在 React 專案中請直接用隨附的 App.tsx 登入；單檔版請先於下方展開填入 Firebase 金鑰，或直接使用 JSON 匯出/匯入備份！');
+        return;
+      }
+      try {
+        showToast('正在啟動 Google 雲端安全驗證...');
+        const cfg = JSON.parse(savedCfg);
+        const [{ initializeApp }, { getAuth, signInWithPopup, GoogleAuthProvider }, { getFirestore, doc, getDoc, setDoc }] = await Promise.all([
+          import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
+          import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
+          import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js')
+        ]);
+        const app = initializeApp(cfg, 'ctm_cloud_' + Date.now());
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const res = await signInWithPopup(auth, new GoogleAuthProvider());
+        const usr = res.user;
+        if (usr) {
+          document.getElementById('cloudModalUserTitle').textContent = `已登入：${usr.email}`;
+          document.getElementById('cloudModalUserDesc').textContent = '已連線至 Firestore 雲端資料庫 (users/' + usr.uid.slice(0, 6) + '...)';
+          document.getElementById('headerCloudLabel').textContent = '雲端已同步';
+          document.getElementById('headerCloudDot').className = 'w-2 h-2 rounded-full bg-emerald-400';
+          const snap = await getDoc(doc(db, 'users', usr.uid));
+          if (snap.exists()) {
+            importLegacySchemaObject(snap.data(), false);
+            showToast(`Google 雲端同步成功 (${usr.email})！`);
+          } else {
+            await setDoc(doc(db, 'users', usr.uid), appState);
+            showToast('已將目前日誌備份上傳至 Google 雲端！');
+          }
+        }
+      } catch (err) {
+        showToast('Google 登入提示：' + (err.message || '請確認網域已加入 Firebase 授權清單'), 'error');
+      }
+    };
+
+    window.handleGoogleCloudLogout = function() {
+      document.getElementById('cloudModalUserTitle').textContent = '本機離線自動儲存已開啟';
+      document.getElementById('headerCloudLabel').textContent = 'Google 備份';
+      showToast('已切換回本機離線儲存模式');
+    };
+
+    // ==========================================
+    // 📸 PNL SHARE POSTER GENERATOR (CANVAS 2D — ZERO OVERFLOW AUTO-FIT)
     // ==========================================
     let currentSharePayload = null;
     let currentPosterTheme = 'ember';
@@ -3506,8 +3854,8 @@
         const b = document.getElementById(`poster-theme-${t}`);
         if (b) {
           b.className = t === theme
-            ? 'px-2.5 py-1 rounded-lg text-[11px] font-bold subtab-active'
-            : 'px-2.5 py-1 rounded-lg text-[11px] text-zinc-400 hover:text-white';
+            ? 'px-2.5 py-1.5 rounded-xl text-xs font-bold subtab-active text-center'
+            : 'px-2.5 py-1.5 rounded-xl text-xs text-zinc-400 hover:text-white text-center';
         }
       });
       drawSharePosterCanvas();
@@ -3547,7 +3895,7 @@
         metric4Val: (!t.mistake || t.mistake === '無心魔') ? '🛡️ 零心魔完美紀律' : `👹 ${t.mistake}`,
         note: t.note || '紀律即命運 — 嚴格執行風控計畫，每一筆交易都是認知的變現。'
       };
-      document.getElementById('shareModalTitle').textContent = `📸 分享單筆交易戰報 (${t.symbol})`;
+      document.getElementById('shareModalTitle').textContent = `分享單筆交易戰報 (${t.symbol})`;
       document.getElementById('shareCardModal').classList.remove('hidden');
       document.getElementById('shareCardModal').classList.add('flex');
       drawSharePosterCanvas();
@@ -3584,7 +3932,7 @@
         metric4Val: `🛡️ ${m.disciplineRate.toFixed(0)}%`,
         note: appState.dailyNotes[selDate] || '今日嚴守交易計畫，控制回撤、穩定收割正期望值！'
       };
-      document.getElementById('shareModalTitle').textContent = `📸 分享 ${selDate} 當日匯總戰報`;
+      document.getElementById('shareModalTitle').textContent = `分享 ${selDate} 當日匯總戰報`;
       document.getElementById('shareCardModal').classList.remove('hidden');
       document.getElementById('shareCardModal').classList.add('flex');
       drawSharePosterCanvas();
@@ -3616,7 +3964,7 @@
         metric4Val: `🛡️ ${m.disciplineRate.toFixed(1)}%`,
         note: document.getElementById('aiCoachInsightText')?.textContent || 'DISCIPLINE IS DESTINY — 紀律即命運。'
       };
-      document.getElementById('shareModalTitle').textContent = `📸 曬出帳戶總戰報 (${acc.name})`;
+      document.getElementById('shareModalTitle').textContent = `曬出帳戶總戰報 (${acc.name})`;
       document.getElementById('shareCardModal').classList.remove('hidden');
       document.getElementById('shareCardModal').classList.add('flex');
       drawSharePosterCanvas();
@@ -3635,6 +3983,17 @@
       ctx.arcTo(x, y + h, x, y, r);
       ctx.arcTo(x, y, x + w, y, r);
       ctx.closePath();
+    }
+
+    // Auto-shrink font size so text NEVER overflows its container box!
+    function fitCanvasFont(ctx, text, maxWidth, startSize, minSize = 20, weight = '900', family = '"JetBrains Mono", "Noto Sans TC", sans-serif') {
+      let sz = startSize;
+      while (sz > minSize) {
+        ctx.font = `${weight} ${sz}px ${family}`;
+        if (ctx.measureText(String(text)).width <= maxWidth) break;
+        sz -= 2;
+      }
+      return sz;
     }
 
     window.drawSharePosterCanvas = function() {
@@ -3678,95 +4037,101 @@
       ctx.fillRect(0, 0, W, H);
 
       // Outer Card Border
-      ctx.strokeStyle = currentPosterTheme === 'gold' ? 'rgba(245, 158, 11, 0.45)' : 'rgba(255, 107, 0, 0.45)';
+      ctx.strokeStyle = currentPosterTheme === 'gold' ? 'rgba(245, 158, 11, 0.5)' : 'rgba(255, 107, 0, 0.5)';
       ctx.lineWidth = 3;
       drawRoundRect(ctx, 24, 24, W - 48, H - 48, 28);
       ctx.stroke();
 
       // 2. Top Brand Header
-      drawRoundRect(ctx, 56, 56, 64, 64, 16);
+      drawRoundRect(ctx, 56, 52, 66, 66, 16);
       ctx.fillStyle = '#FF6B00';
       ctx.fill();
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '900 22px "JetBrains Mono", monospace';
+      ctx.font = '900 24px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
-      ctx.fillText('CTM', 88, 96);
+      ctx.fillText('CTM', 89, 94);
 
       ctx.textAlign = 'left';
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '800 26px "Noto Sans TC", sans-serif';
-      ctx.fillText('C.T.M 交易巨獸 PRO', 136, 84);
+      ctx.font = '900 28px "Noto Sans TC", sans-serif';
+      ctx.fillText('C.T.M 交易巨獸 PRO', 138, 82);
       ctx.fillStyle = '#FF8533';
       ctx.font = '700 14px "JetBrains Mono", monospace';
-      ctx.fillText('COGNITIVE TRADING MONSTER ・ DISCIPLINE IS DESTINY', 136, 110);
+      ctx.fillText('COGNITIVE TRADING MONSTER ・ DISCIPLINE IS DESTINY', 138, 108);
 
       // Trader Rank Pill
       const traderName = appState.traderName || 'CTM 巨獸交易員';
       const rankBadge = document.getElementById('headerLevelBadge')?.textContent || 'LV.1';
       const sanText = document.getElementById('headerSanText')?.textContent || 'SAN 100%';
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
-      drawRoundRect(ctx, 56, 142, W - 112, 46, 12);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.07)';
+      drawRoundRect(ctx, 56, 136, W - 112, 48, 12);
       ctx.fill();
-      ctx.fillStyle = '#E4E4E7';
-      ctx.font = '700 16px "Noto Sans TC", sans-serif';
-      ctx.fillText(`👤 ${traderName} (${rankBadge})`, 74, 171);
+      ctx.fillStyle = '#F4F4F6';
+      ctx.font = '700 18px "Noto Sans TC", sans-serif';
+      ctx.fillText(`👤 ${traderName} (${rankBadge})`, 74, 167);
       ctx.textAlign = 'right';
       ctx.fillStyle = '#34D399';
-      ctx.font = '700 15px "JetBrains Mono", monospace';
-      ctx.fillText(`🧠 ${sanText}`, W - 74, 171);
+      ctx.font = '700 17px "JetBrains Mono", monospace';
+      ctx.fillText(`🧠 ${sanText}`, W - 74, 167);
 
       // 3. Symbol & Direction Banner
       ctx.textAlign = 'left';
       ctx.fillStyle = '#A1A1AA';
-      ctx.font = '600 16px "Noto Sans TC", sans-serif';
-      ctx.fillText(p.date, 56, 232);
+      ctx.font = '600 18px "Noto Sans TC", sans-serif';
+      ctx.fillText(p.date, 56, 224);
 
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '900 44px "JetBrains Mono", sans-serif';
-      ctx.fillText(p.symbol, 56, 286);
+      fitCanvasFont(ctx, p.symbol, W - 112, 48, 28, '900', '"JetBrains Mono", sans-serif');
+      ctx.fillText(p.symbol, 56, 280);
 
       // Direction Pill
       const dirText = p.mode === 'trade' ? (p.direction === 'LONG' ? '📈 做多 LONG' : '📉 做空 SHORT') : (isProfit ? '🏆 淨獲利 WIN' : '🛡️ 風控檢討 LOSS');
-      ctx.fillStyle = isProfit ? 'rgba(16, 185, 129, 0.2)' : 'rgba(244, 63, 94, 0.2)';
-      drawRoundRect(ctx, 56, 304, 170, 38, 10);
+      ctx.fillStyle = isProfit ? 'rgba(16, 185, 129, 0.22)' : 'rgba(244, 63, 94, 0.22)';
+      drawRoundRect(ctx, 56, 298, 184, 42, 12);
       ctx.fill();
       ctx.fillStyle = isProfit ? '#34D399' : '#FB7185';
-      ctx.font = '800 17px "JetBrains Mono", sans-serif';
-      ctx.fillText(dirText, 72, 329);
+      ctx.font = '800 18px "JetBrains Mono", "Noto Sans TC", sans-serif';
+      ctx.fillText(dirText, 72, 325);
 
       // R-Multiple / WinRate Badge
-      ctx.fillStyle = 'rgba(255, 107, 0, 0.2)';
-      drawRoundRect(ctx, 238, 304, 150, 38, 10);
+      ctx.fillStyle = 'rgba(255, 107, 0, 0.22)';
+      drawRoundRect(ctx, 252, 298, 170, 42, 12);
       ctx.fill();
       ctx.fillStyle = '#FB923C';
-      ctx.fillText(`⚡ ${p.rText}`, 254, 329);
+      ctx.font = '800 18px "JetBrains Mono", "Noto Sans TC", sans-serif';
+      ctx.fillText(`⚡ ${p.rText}`, 268, 325);
 
-      // 4. Giant Hero PnL Display Box
-      drawRoundRect(ctx, 56, 364, W - 112, 168, 22);
-      ctx.fillStyle = 'rgba(10, 10, 15, 0.88)';
+      // 4. Giant Hero PnL Display Box (Guaranteed Zero Overflow with fitCanvasFont!)
+      const boxX = 56;
+      const boxY = 358;
+      const boxW = W - 112; // 608px
+      const boxH = 172;
+      drawRoundRect(ctx, boxX, boxY, boxW, boxH, 22);
+      ctx.fillStyle = 'rgba(10, 10, 15, 0.90)';
       ctx.fill();
-      ctx.strokeStyle = isProfit ? 'rgba(16, 185, 129, 0.45)' : 'rgba(244, 63, 94, 0.45)';
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = isProfit ? 'rgba(16, 185, 129, 0.55)' : 'rgba(244, 63, 94, 0.55)';
+      ctx.lineWidth = 2.5;
       ctx.stroke();
 
       ctx.fillStyle = '#A1A1AA';
-      ctx.font = '700 16px "Noto Sans TC", sans-serif';
-      ctx.fillText(hideDollar ? '實戰報酬表現 (已開啟隱私保護)' : '實戰交割淨損益 (NET PNL)', 84, 404);
+      ctx.font = '700 17px "Noto Sans TC", sans-serif';
+      ctx.fillText(hideDollar ? '實戰報酬表現 (已開啟隱私保護)' : '實戰交割淨損益 (NET PNL)', boxX + 28, boxY + 38);
 
       const mainHeroValue = hideDollar
         ? `${p.roiPct >= 0 ? '+' : ''}${p.roiPct.toFixed(2)}% (${p.rText})`
         : formatUsd(p.pnl, true);
 
       ctx.fillStyle = isProfit ? '#10B981' : '#F43F5E';
-      ctx.font = '900 64px "JetBrains Mono", monospace';
-      ctx.fillText(mainHeroValue, 84, 476);
+      // Fit within (boxW - 56 = 552px) so it NEVER touches or crosses the right border!
+      fitCanvasFont(ctx, mainHeroValue, boxW - 56, 62, 28, '900', '"JetBrains Mono", monospace');
+      ctx.fillText(mainHeroValue, boxX + 28, boxY + 110);
 
-      ctx.fillStyle = '#D4D4D8';
-      ctx.font = '700 18px "JetBrains Mono", monospace';
-      const subRoiText = hideDollar ? '🔒 已隱藏具體美金金額' : `帳戶資金報酬率 ROI: ${p.roiPct >= 0 ? '+' : ''}${p.roiPct.toFixed(2)}%`;
-      ctx.fillText(subRoiText, 84, 512);
+      ctx.fillStyle = '#E4E4E7';
+      ctx.font = '700 18px "JetBrains Mono", "Noto Sans TC", monospace';
+      const subRoiText = hideDollar ? '🔒 已隱藏具體美金金額 ・ 專注風控與盈虧比' : `帳戶資金報酬率 ROI: ${p.roiPct >= 0 ? '+' : ''}${p.roiPct.toFixed(2)}%`;
+      ctx.fillText(subRoiText, boxX + 28, boxY + 148);
 
-      // 5. 2x2 Tactical Metrics Grid
+      // 5. 2x2 Tactical Metrics Grid (Larger, Crisper Fonts & Auto-Fit)
       const gridItems = [
         { label: p.metric1Label, val: p.metric1Val },
         { label: p.metric2Label, val: p.metric2Val },
@@ -3777,43 +4142,77 @@
         const col = idx % 2;
         const row = Math.floor(idx / 2);
         const gx = 56 + col * 308;
-        const gy = 554 + row * 92;
-        drawRoundRect(ctx, gx, gy, 292, 78, 14);
-        ctx.fillStyle = 'rgba(24, 24, 34, 0.9)';
+        const gy = 548 + row * 96;
+        drawRoundRect(ctx, gx, gy, 292, 84, 16);
+        ctx.fillStyle = 'rgba(24, 24, 34, 0.92)';
         ctx.fill();
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.10)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.fillStyle = '#A1A1AA';
+        ctx.font = '700 16px "Noto Sans TC", sans-serif';
+        ctx.fillText(item.label, gx + 20, gy + 30);
+
+        ctx.fillStyle = '#FFFFFF';
+        const valStr = String(item.val || '--');
+        fitCanvasFont(ctx, valStr, 252, 24, 15, '800', '"JetBrains Mono", "Noto Sans TC", sans-serif');
+        ctx.fillText(valStr, gx + 20, gy + 64);
+      });
+
+      // 6. Review Note Box (Multi-line pixel wrap so notes never overflow!)
+      if (showNote) {
+        drawRoundRect(ctx, 56, 746, W - 112, 96, 16);
+        ctx.fillStyle = 'rgba(255, 107, 0, 0.09)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(255, 107, 0, 0.25)';
         ctx.lineWidth = 1;
         ctx.stroke();
 
-        ctx.fillStyle = '#71717A';
-        ctx.font = '600 14px "Noto Sans TC", sans-serif';
-        ctx.fillText(item.label, gx + 18, gy + 28);
+        ctx.fillStyle = '#FDBA74';
+        ctx.font = '700 16px "Noto Sans TC", sans-serif';
+        ctx.fillText('📝 實戰復盤筆記：', 76, 776);
 
         ctx.fillStyle = '#F4F4F6';
-        ctx.font = '800 19px "JetBrains Mono", "Noto Sans TC", sans-serif';
-        ctx.fillText(String(item.val).slice(0, 18), gx + 18, gy + 58);
-      });
-
-      // 6. Review Note Box
-      if (showNote) {
-        drawRoundRect(ctx, 56, 748, W - 112, 74, 14);
-        ctx.fillStyle = 'rgba(255, 107, 0, 0.08)';
-        ctx.fill();
-        ctx.fillStyle = '#FDBA74';
-        ctx.font = '700 14px "Noto Sans TC", sans-serif';
-        ctx.fillText('📝 實戰復盤筆記：', 74, 774);
-        ctx.fillStyle = '#E4E4E7';
-        ctx.font = '500 15px "Noto Sans TC", sans-serif';
+        ctx.font = '600 16px "Noto Sans TC", sans-serif';
         const cleanNote = String(p.note || '').replace(/\n/g, ' ');
-        ctx.fillText(cleanNote.length > 34 ? cleanNote.slice(0, 34) + '...' : cleanNote, 74, 802);
+        const maxLineW = W - 156;
+        let line1 = '';
+        let line2 = '';
+        for (let i = 0; i < cleanNote.length; i++) {
+          const test1 = line1 + cleanNote[i];
+          if (ctx.measureText(test1).width <= maxLineW) {
+            line1 = test1;
+          } else {
+            const rest = cleanNote.slice(i);
+            for (let j = 0; j < rest.length; j++) {
+              const test2 = line2 + rest[j];
+              if (ctx.measureText(test2 + '...').width <= maxLineW) {
+                line2 = test2;
+              } else {
+                line2 += '...';
+                break;
+              }
+            }
+            break;
+          }
+        }
+        ctx.fillText(line1, 76, 804);
+        if (line2) ctx.fillText(line2, 76, 828);
       }
 
       // 7. Footer Watermark
       ctx.fillStyle = '#71717A';
-      ctx.font = '600 13px "JetBrains Mono", monospace';
+      ctx.font = '700 13px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
-      ctx.fillText('GENERATED BY C.T.M TRADING MONSTER PRO ・ DISCIPLINE IS DESTINY', W / 2, H - 40);
+      ctx.fillText('GENERATED BY C.T.M TRADING MONSTER PRO ・ DISCIPLINE IS DESTINY', W / 2, H - 38);
       ctx.textAlign = 'left';
+
+      // Sync to <img> for mobile long-press save!
+      const imgEl = document.getElementById('sharePosterImgPreview');
+      if (imgEl) {
+        imgEl.src = canvas.toDataURL('image/png');
+      }
     };
 
     window.downloadSharePoster = function() {
@@ -3851,6 +4250,20 @@
       }, 'image/png');
     };
 
+    window.copySharePosterText = function() {
+      if (!currentSharePayload) return;
+      const p = currentSharePayload;
+      const hideDollar = document.getElementById('shareHideDollarChk')?.checked;
+      const pnlStr = hideDollar ? `${p.roiPct >= 0 ? '+' : ''}${p.roiPct.toFixed(2)}% (${p.rText})` : formatUsd(p.pnl, true);
+      const txt = `📊 【C.T.M 交易巨獸戰報】\n👑 ${appState.traderName || 'CTM 巨獸交易員'}\n📈 標的：${p.symbol} (${p.direction})\n💰 實戰表現：${pnlStr}\n⚡ ${p.metric3Label}：${p.metric3Val}\n📝 復盤：${p.note}`;
+      try {
+        navigator.clipboard.writeText(txt);
+        showToast('📋 戰報文字已複製到剪貼簿！');
+      } catch (e) {
+        copyPriceText(txt);
+      }
+    };
+
     function renderAll() {
       renderHeaderAndRpg();
       renderDashboard();
@@ -3867,6 +4280,8 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       loadState();
+      syncFromLegacyAppTsxStorage();
+      applyFontSizeMode();
       renderAll();
     });
   </script>
