@@ -1,0 +1,24 @@
+{
+  "name": "C.T.M 交易巨獸 PRO — 交易日誌與風控系統",
+  "short_name": "CTM 交易巨獸",
+  "description": "專業級全能交易日誌、鐵血倉位風控試算、時段熱力圖與紀律養成系統",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#08080B",
+  "theme_color": "#FF6B00",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
